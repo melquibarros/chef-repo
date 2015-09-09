@@ -9,3 +9,4 @@ validation_client_name   "melqui-validator"
 validation_key           "#{current_dir}/melqui-validator.pem"
 chef_server_url          "https://api.opscode.com/organizations/melqui"
 cookbook_path            ["#{current_dir}/../cookbooks"]
+knife[:editor] = '"C:\Program Files\Sublime Text 3\sublime_text.exe" --wait'
