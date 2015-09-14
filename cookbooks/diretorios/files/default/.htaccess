@@ -1,0 +1,11 @@
+AuthUserFile /var/www/passwd/XML
+#AuthGroupFile /dev/null
+AuthDigestQop auth
+AuthName "XML"
+AuthType Digest
+AuthDigestDomain /xml/
+Options ExecCGI
+
+<Limit GET POST>
+require valid-user
+</Limit>
