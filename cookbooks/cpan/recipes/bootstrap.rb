@@ -2,7 +2,7 @@ include_recipe 'cpan'
 
 node.cpan_client.bootstrap.packages.each  { |p| package p }
 
-execute 'curl -L http://cpanmin.us | perl - --sudo App::cpanminus' do
+execute 'curl -L http://cpanmin.us | perl - App::cpanminus' do
     only_if do
         exe_run = true
         unless node.cpan_client.bootstrap.keep_uptodate

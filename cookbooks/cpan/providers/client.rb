@@ -164,7 +164,7 @@ end
 def local_lib_stack
 
   stack = '';
-  #stack  << "#{perl5lib_stack}; " unless ( perl5lib_stack.nil? || perl5lib_stack.empty? )
+  stack  << "#{perl5lib_stack}; " unless ( perl5lib_stack.nil? || perl5lib_stack.empty? )
 
   unless  @installer.install_base.nil?
     stack << "eval $(perl -Mlocal::lib=#{real_install_base}); #{evaluate_mb_opt} "
@@ -404,7 +404,7 @@ def install_cpan_module args = { }
 
         bash "checking if module exists at CPAN" do
             code <<-CODE
-                #{local_lib_stack}
+                {local_lib_stack}
                 perl -MCPAN -e '
                 my $m = CPAN::Shell->expand("#{cpan_type}","#{module_name}");
                 exit(2) unless defined $m';
@@ -419,13 +419,13 @@ def install_cpan_module args = { }
     if @installer.version.nil? && module_name != '.' && @test_mode.nil? # not install if uptodate
         bash "installing cpan module" do
             code <<-CODE
-                #{local_lib_stack}
+                {local_lib_stack}
                 perl -MCPAN -e '
                 my $m = CPAN::Shell->expand("#{cpan_type}","#{module_name}");
                 if ($m->uptodate){
                      print "#{module_name} -- OK have higher or equal version [",$m->inst_version,"] [",$m->inst_file,"]\n";
                 }else{
-                    #{install_perl_code}
+                    {install_perl_code}
                 }' #{install_object} 1>>#{install_log_file} 2>&1
             CODE
             user user
@@ -436,13 +436,13 @@ def install_cpan_module args = { }
     elsif @installer.version == "0" && module_name != '.' && @test_mode.nil? # not install if any version already installed
         bash "installing cpan module" do
             code <<-CODE
-                #{local_lib_stack}
+                {local_lib_stack}
                 perl -MCPAN -e '
                 my $m = CPAN::Shell->expand("#{cpan_type}","#{module_name}");
                 if ($m->inst_version){
                      print "#{module_name} -- OK already installed at version [",$m->inst_version,"] [",$m->inst_file,"]\n";
                 }else{
-                    #{install_perl_code}
+                    {install_perl_code}
                 }' #{install_object} 1>>#{install_log_file} 2>&1
             CODE
             user user
@@ -454,7 +454,7 @@ def install_cpan_module args = { }
         v = @installer.version
         bash "installing cpan module" do
             code <<-CODE
-                #{local_lib_stack}
+                {local_lib_stack}
                 perl -MCPAN -MCPAN::Version -e '
                 my $m = CPAN::Shell->expand("#{cpan_type}","#{module_name}");
                 my $inst_v = CPAN::Shell->expand("#{cpan_type}","#{module_name}")->inst_version;
@@ -462,18 +462,18 @@ def install_cpan_module args = { }
                 s/\s//g for $version_required;
                 my $exact_version_check = 0;
                 if ($version_required=~/=/){
-                    $exact_version_check =  1;
-                    s/=//g for $version_required;
-                }
-                
-                if ($exact_version_check == 0 && CPAN::Version->vcmp($inst_v, $version_required) >= 0){
-                    print "#{module_name} -- OK : have higher or equal version [$inst_v] [",$m->inst_file,"]\n";
-                }elsif($exact_version_check == 1 &&  CPAN::Version->vcmp($inst_v, $version_required) == 0){
-                    print "#{module_name} -- OK : have equal version [$inst_v] [",$m->inst_file,"]\n";
-                }else{
-                    #{install_perl_code}
-                }' #{install_object} 1>>#{install_log_file} 2>&1
-            CODE
+                    # $exact_version_check =  1;
+                    # s/=//g for $version_required;
+                # }
+                # 
+                # if ($exact_version_check == 0 && CPAN::Version->vcmp($inst_v, $version_required) >= 0){
+                    # print "#{module_name} -- OK : have higher or equal version [$inst_v] [",$m->inst_file,"]\n";
+                # }elsif($exact_version_check == 1 &&  CPAN::Version->vcmp($inst_v, $version_required) == 0){
+                    # print "#{module_name} -- OK : have equal version [$inst_v] [",$m->inst_file,"]\n";
+                # }else{
+                    # {install_perl_code}
+                # }' #{install_object} 1>>#{install_log_file} 2>&1
+            # CODE
             user user
             group group
             cwd cwd
@@ -482,9 +482,9 @@ def install_cpan_module args = { }
   elsif ! @test_mode.nil? && @test_mode == 1
       bash 'running tests on cpan module' do
             code <<-CODE
-                #{local_lib_stack}
+                {local_lib_stack}
                 perl -MCPAN -e '
-                #{install_perl_code}' #{install_object} 1>>#{install_log_file} 2>&1
+                {install_perl_code}' #{install_object} 1>>#{install_log_file} 2>&1
             CODE
             user user
             group group
@@ -494,9 +494,9 @@ def install_cpan_module args = { }
   elsif module_name == '.'
       bash 'installing cpan module as cpan_client .' do
             code <<-CODE
-                #{local_lib_stack}
+                {local_lib_stack}
                 perl -MCPAN -e '
-                #{install_perl_code}' #{install_object} 1>>#{install_log_file} 2>&1
+                {install_perl_code}' #{install_object} 1>>#{install_log_file} 2>&1
             CODE
             user user
             group group

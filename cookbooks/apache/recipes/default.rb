@@ -18,7 +18,6 @@ node["apache"]["sites"].each do |sitename, data|
 	document_root = "/content/sites/#{sitename}"
 
 	directory document_root do
-
 		mode '0755'
 	  	recursive true
 	  	action :create
@@ -30,7 +29,6 @@ node["apache"]["sites"].each do |sitename, data|
 	end
 	template template_location do
   		source 'vhost.erb'
-
   		mode '0644'
   		variables(
   			:document_root => document_root,
@@ -69,3 +67,4 @@ service 'httpd' do
 end
 
 #include_recipe 'php::default'
+
